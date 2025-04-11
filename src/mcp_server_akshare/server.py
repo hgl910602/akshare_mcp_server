@@ -15,7 +15,7 @@ from mcp.server.models import InitializationOptions
 
 from .api import (
     fetch_bond_zh_hs_cov_spot,
-    fetch_forex_spot_quote,
+    fetch_forex_spot_em,
     fetch_fund_etf_category_sina,
     fetch_fund_etf_hist_sina,
     fetch_futures_zh_spot,
@@ -24,7 +24,7 @@ from .api import (
     fetch_stock_zh_a_hist,
     fetch_stock_zh_a_spot,
     fetch_stock_zh_index_daily,
-    fetch_stock_zh_index_spot,
+    fetch_stock_zh_index_spot_sina,
     fetch_stock_zt_pool_strong_em,
 )
 
@@ -221,7 +221,7 @@ async def handle_call_tool(
                     adjust=adjust,
                 )
             case AKShareTools.STOCK_ZH_INDEX_SPOT.value:
-                result = await fetch_stock_zh_index_spot()
+                result = await fetch_stock_zh_index_spot_sina()
             case AKShareTools.STOCK_ZH_INDEX_DAILY.value:
                 symbol = arguments.get("symbol")
                 if not symbol:
@@ -242,7 +242,7 @@ async def handle_call_tool(
             case AKShareTools.MACRO_CHINA_CPI.value:
                 result = await fetch_macro_china_cpi()
             case AKShareTools.FOREX_SPOT_QUOTE.value:
-                result = await fetch_forex_spot_quote()
+                result = await fetch_forex_spot_em()
             case AKShareTools.FUTURES_ZH_SPOT.value:
                 result = await fetch_futures_zh_spot()
             case AKShareTools.BOND_ZH_HS_COV_SPOT.value:

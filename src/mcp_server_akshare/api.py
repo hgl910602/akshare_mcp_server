@@ -77,12 +77,12 @@ async def fetch_stock_zh_a_hist(
         raise
 
 
-async def fetch_stock_zh_index_spot() -> List[Dict[str, Any]]:
+async def fetch_stock_zh_index_spot_sina() -> List[Dict[str, Any]]:
     """
     Fetch Chinese stock market index data.
     """
     try:
-        df = ak.stock_zh_index_spot()
+        df = ak.stock_zh_index_spot_sina()
         return dataframe_to_dict(df)
     except Exception as e:
         logger.error(f"Error fetching stock index data: {e}")
@@ -158,12 +158,12 @@ async def fetch_macro_china_cpi() -> List[Dict[str, Any]]:
         raise
 
 
-async def fetch_forex_spot_quote() -> List[Dict[str, Any]]:
+async def fetch_forex_spot_em() -> List[Dict[str, Any]]:
     """
     Fetch forex spot quotes.
     """
     try:
-        df = ak.forex_spot_quote()
+        df = ak.forex_spot_em()
         return dataframe_to_dict(df)
     except Exception as e:
         logger.error(f"Error fetching forex spot quotes: {e}")
