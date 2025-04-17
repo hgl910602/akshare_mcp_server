@@ -132,3 +132,11 @@ class GeneratedToolRepository:
             conn.commit()
         finally:
             conn.close()
+
+
+if __name__ == "__main__":
+    repo = GeneratedToolRepository()
+    tools = repo.get_all_tools()
+    print("获取到的工具列表:")
+    for tool in tools:
+        print(f"- {tool.name}: {tool.description}")

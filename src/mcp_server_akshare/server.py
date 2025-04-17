@@ -12,59 +12,33 @@ import mcp.server.stdio
 import mcp.types as types
 from mcp.server import NotificationOptions, Server
 from mcp.server.models import InitializationOptions
+from persistence.generated_tool_repository import GeneratedToolRepository
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
-class AKShareTools(str, Enum):
-    """
-    Enum for AKShare tools.
-    """
-    STOCK_ZH_A_SPOT = "stock_zh_a_spot"
-    STOCK_ZH_A_HIST = "stock_zh_a_hist"
-    STOCK_ZH_INDEX_SPOT = "stock_zh_index_spot"
-    STOCK_ZH_INDEX_DAILY = "stock_zh_index_daily"
-    FUND_ETF_CATEGORY_SINA = "fund_etf_category_sina"
-    FUND_ETF_HIST_SINA = "fund_etf_hist_sina"
-    MACRO_CHINA_GDP = "macro_china_gdp"
-    MACRO_CHINA_CPI = "macro_china_cpi"
-    FOREX_SPOT_QUOTE = "forex_spot_quote"
-    FUTURES_ZH_SPOT = "futures_zh_spot"
-    BOND_ZH_HS_COV_SPOT = "bond_zh_hs_cov_spot"
-    STOCK_ZT_POOL_STRONG_EM = "stock_zt_pool_strong_em"
-    STOCK_BOARD_INDEX_SPOT = "stock_board_index_spot"
-    STOCK_BOARD_INDEX_HIST = "stock_board_index_hist"
-
-
 # Create the server
 server = Server("akshare")
 
-
 class AKShareTools(str, Enum):
-    """自动生成的工具枚举"""
+    """动态生成的工具枚举"""
     @classmethod
-    def from_generated_tools(cls, tools: List[types.Tool]):
-        """从生成的工具创建枚举"""
+    def initialize(cls):
+        """从数据库初始化工具枚举"""
+        repo = GeneratedToolRepository()
+        tools = repo.get_all_tools()
         for tool in tools:
             setattr(cls, tool.name.upper(), tool.name)
         return cls
 
-# 在初始化时注册工具
-from persistence.generated_tool_repository import GeneratedToolRepository
+# Initialize tools when module loads
+AKShareTools.initialize()
 
 @server.list_tools()
 async def handle_list_tools() -> List[types.Tool]:
     """从数据库获取所有工具"""
     repo = GeneratedToolRepository()
-    tools = repo.get_all_tools()
-    return [
-        types.Tool(
-            name=tool.name,
-            description=tool.description,
-            inputSchema=tool.inputSchema
-        )
-        for tool in tools
-    ]
+    return repo.get_all_tools()
 
 def _get_input_schema(func: callable) -> Dict:
     """从函数签名生成输入schema"""
@@ -95,7 +69,11 @@ async def handle_call_tool(
         result = await module.execute(**arguments)
         
         # 转换结果为JSON字符串
-        result_json = json.dumps(result, ensure_ascii=False, indent=2)
+        if hasattr(result, 'to_dict'):  # 检查是否是DataFrame
+            result_json = json.dumps(result.to_dict(orient='records'), ensure_ascii=False, indent=2)
+        else:
+            result_json = json.dumps(result, ensure_ascii=False, indent=2)
+            
         return [types.TextContent(type="text", text=result_json)]
         
     except Exception as e:
