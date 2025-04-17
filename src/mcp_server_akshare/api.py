@@ -233,4 +233,47 @@ async def fetch_stock_zt_pool_strong_em(date: str = None) -> List[Dict[str, Any]
             return []
     except Exception as e:
         logger.error(f"Error fetching strong stock pool data for date {date}: {e}")
-        raise 
+        raise
+
+
+async def fetch_stock_board_index_spot() -> List[Dict[str, Any]]:
+    """
+    获取A股板块指数实时数据
+    """
+    try:
+        df = ak.stock_board_concept_spot_em()
+        if df.empty:
+            print("No data available for stock board index spot")
+            logger.warning("No data available for stock board index spot")
+            return []
+        else:
+            print(df)
+        return dataframe_to_dict(df)
+    except Exception as e:
+        logger.error(f"Error fetching stock board index data: {e}")
+        raise
+
+
+async def fetch_stock_board_index_hist(
+    symbol: str,
+    start_date: str = None,
+    end_date: str = None
+) -> List[Dict[str, Any]]:
+    """
+    获取A股板块指数历史数据
+    
+    Args:
+        symbol: 板块代码
+        start_date: 开始日期，格式为YYYYMMDD
+        end_date: 结束日期，格式为YYYYMMDD
+    """
+    try:
+        df = ak.stock_board_concept_hist_em(
+            symbol=symbol,
+            start_date=start_date,
+            end_date=end_date
+        )
+        return dataframe_to_dict(df)
+    except Exception as e:
+        logger.error(f"Error fetching stock board index history for {symbol}: {e}")
+        raise
