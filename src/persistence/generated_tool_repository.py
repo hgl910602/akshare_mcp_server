@@ -9,7 +9,7 @@ class GeneratedToolRepository:
     def __init__(self):
         """初始化仓库，使用固定路径的数据库文件"""
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.db_path = os.path.join(current_dir, "stock_meta.db")
+        self.db_path = os.path.join(current_dir, "tools_meta.db")
         self._ensure_table_exists()
     
     def _ensure_table_exists(self):

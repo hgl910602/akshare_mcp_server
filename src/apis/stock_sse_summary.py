@@ -4,33 +4,36 @@ import akshare as ak
 import pandas as pd
 
 
-async def fetch_stock_sse_summary() -> pd.DataFrame:
+async def stock_sse_summary() -> pd.DataFrame:
     """
-    异步获取上海证券交易所-股票数据总貌
-    
-    Returns:
-        pd.DataFrame: 包含股票市场总貌数据的DataFrame
+    上海证券交易所-股票数据总貌
+    :return: 上海证券交易所股票数据总貌
+    :rtype: pandas.DataFrame
     """
     try:
-        # 使用akshare同步接口，通过run_in_executor转换为异步
+        # 使用akshare同步接口获取数据
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(None, ak.stock_sse_summary)
         return result
     except Exception as e:
-        raise Exception(f"获取上海证券交易所股票数据总貌失败: {e}")
+        raise ValueError(f"获取上海证券交易所股票数据总貌失败: {e}")
 
 
-async def main() -> None:
+async def execute() -> pd.DataFrame:
     """
-    主函数，用于测试fetch_stock_sse_summary
+    执行函数，获取上海证券交易所股票数据总貌
+    :return: 上海证券交易所股票数据总貌
+    :rtype: pandas.DataFrame
     """
-    try:
-        df = await fetch_stock_sse_summary()
-        print("上海证券交易所股票数据总貌:")
-        print(df)
-    except Exception as e:
-        print(f"测试失败: {e}")
+    return await stock_sse_summary()
 
 
 if __name__ == "__main__":
+    async def main():
+        try:
+            df = await execute()
+            print(df)
+        except Exception as e:
+            print(f"发生错误: {e}")
+
     asyncio.run(main())

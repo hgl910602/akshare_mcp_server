@@ -43,7 +43,7 @@ server = Server("akshare")
 class AKShareTools(str, Enum):
     """自动生成的工具枚举"""
     @classmethod
-    def from_generated_tools(cls, tools: List[Tool]):
+    def from_generated_tools(cls, tools: List[types.Tool]):
         """从生成的工具创建枚举"""
         for tool in tools:
             setattr(cls, tool.name.upper(), tool.name)
@@ -80,15 +80,19 @@ async def handle_call_tool(
         if arguments is None:
             arguments = {}
             
-        # 动态查找对应的fetch函数
-        func_name = f"fetch_{name}"
-        if func_name not in globals():
-            raise ValueError(f"Tool {name} not found")
-            
-        fetch_func = globals()[func_name]
+        # 动态导入对应的API模块
+        module_name = f"apis.{name}"
+        try:
+            module = __import__(module_name, fromlist=[''])
+        except ImportError as e:
+            raise ValueError(f"Tool module {name} not found: {str(e)}")
         
-        # 调用函数并传入参数
-        result = await fetch_func(**arguments)
+        # 检查模块中是否有execute方法
+        if not hasattr(module, 'execute'):
+            raise ValueError(f"Module {name} does not have execute method")
+            
+        # 调用execute方法并传入参数
+        result = await module.execute(**arguments)
         
         # 转换结果为JSON字符串
         result_json = json.dumps(result, ensure_ascii=False, indent=2)

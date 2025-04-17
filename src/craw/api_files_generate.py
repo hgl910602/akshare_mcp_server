@@ -4,7 +4,7 @@ import re
 import json  # 新增json导入
 from pathlib import Path
 from typing import List, Dict  # 新增类型导入
-from code_generator import CodeGenerator
+from craw.code_generator import CodeGenerator
 from mcp.types import Tool
 from enum import Enum
 from persistence.generated_tool_repository import GeneratedToolRepository
@@ -52,7 +52,7 @@ def generate_api_files(update_threshold_minutes: int = 30):
     # 确保目录存在
     os.makedirs(api_dir, exist_ok=True)
     
-    # 初始化仓库
+    # 初始化仓库 (移除下面重复的初始化)
     interface_repo = StockInterfaceRepository()
     tool_repo = GeneratedToolRepository()
     
@@ -62,20 +62,21 @@ def generate_api_files(update_threshold_minutes: int = 30):
     
     # 添加调试信息
     print(f"从数据库查询到 {len(datas)} 条接口记录")
+    print(f"数据库列名: {columns}")
     
     # 为每个接口创建Python文件
-    max_count = 100  # 限制最多处理5个接口
+    max_count = 1  # 限制最多处理5个接口
     processed_count = 0
-    
-    # 初始化仓库
-    tool_repo = GeneratedToolRepository()
     
     for data in datas:
         if processed_count >= max_count:
+            print(f"已达到最大处理数量限制({max_count}/{processed_count})，停止处理")
             break
             
-        data_dict = dict(zip(columns, data))
-        interface_name = data_dict.get('interface_name', '').strip()
+        # 直接使用返回的字典，不需要重新构造
+        data_dict = data  
+        interface_name = data_dict.get('interface_name', '')
+        print(f"获取到的接口名称: {repr(interface_name)}")
         if not interface_name:
             continue
             
@@ -84,6 +85,7 @@ def generate_api_files(update_threshold_minutes: int = 30):
         # 检查是否最近更新过，传入时间阈值
         if tool_repo.is_recently_updated(module_name, update_threshold_minutes):
             print(f"接口 {interface_name} 最近已更新，跳过处理")
+            processed_count += 1
             continue
             
         file_path = os.path.join(api_dir, f"{module_name}.py")
