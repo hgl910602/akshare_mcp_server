@@ -42,7 +42,7 @@ def _save_tools_to_db(conn, tools: List[Tool]):
     
     conn.commit()
 
-def generate_api_files(update_threshold_minutes: int = 30):
+def generate_api_files(update_threshold_minutes: int = 300):
     # 获取当前脚本所在目录
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -65,7 +65,7 @@ def generate_api_files(update_threshold_minutes: int = 30):
     print(f"数据库列名: {columns}")
     
     # 为每个接口创建Python文件
-    max_count = 1  # 限制最多处理5个接口
+    max_count = 400  # 限制最多处理5个接口
     processed_count = 0
     
     for data in datas:

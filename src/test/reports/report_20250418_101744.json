@@ -1,0 +1,148 @@
+{
+  "summary": {
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "success_rate": 90.0
+  },
+  "details": [
+    {
+      "module": "stock_individual_info_em",
+      "passed": false,
+      "output": "[{'item': '\u80a1\u7968\u4ee3\u7801', 'value': '000001'}, {'item': '\u80a1\u7968\u7b80\u79f0', 'value': '\u5e73\u5b89\u94f6\u884c'}, {'item': '\u603b\u80a1\u672c', 'value': 19405918198.0}, {'item': '\u6d41\u901a\u80a1', 'value': 19405571850.0}, {'item': '\u603b\u5e02\u503c', 'value': 215987869543.74002}, {'item': '\u6d41\u901a\u5e02\u503c', 'value': 215984014690.5}, {'item': '\u884c\u4e1a', 'value': '\u94f6\u884c'}, {'item': '\u4e0a\u5e02\u65f6\u95f4', 'value': 19910403}]\n",
+      "error": null,
+      "execution_time": 0.267225980758667,
+      "data_validation": {
+        "valid_type": false,
+        "failure_reason": "\u65e0\u6548\u8fd4\u56de\u7c7b\u578b: <class 'NoneType'>"
+      },
+      "timestamp": "2025-04-18T10:17:42.153427"
+    },
+    {
+      "module": "stock_kc_a_spot_em",
+      "passed": true,
+      "output": "",
+      "error": null,
+      "execution_time": 1.4446520805358887,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:03.770677"
+    },
+    {
+      "module": "stock_zh_a_spot",
+      "passed": true,
+      "output": "",
+      "error": null,
+      "execution_time": 37.75923824310303,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:41.532318"
+    },
+    {
+      "module": "stock_individual_basic_info_xq",
+      "passed": true,
+      "output": "Test executed successfully\n",
+      "error": null,
+      "execution_time": 0.1537628173828125,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:41.687486"
+    },
+    {
+      "module": "stock_sse_summary",
+      "passed": true,
+      "output": "",
+      "error": null,
+      "execution_time": 0.1913301944732666,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:41.880974"
+    },
+    {
+      "module": "stock_szse_sector_summary",
+      "passed": true,
+      "output": "",
+      "error": null,
+      "execution_time": 1.4876458644866943,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:43.643503"
+    },
+    {
+      "module": "stock_bid_ask_em",
+      "passed": true,
+      "output": "",
+      "error": null,
+      "execution_time": 0.2038118839263916,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:43.848495"
+    },
+    {
+      "module": "stock_individual_spot_xq",
+      "passed": true,
+      "output": "Test executed successfully\n",
+      "error": null,
+      "execution_time": 0.4447298049926758,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:44.294798"
+    },
+    {
+      "module": "stock_zh_a_hist",
+      "passed": true,
+      "output": "",
+      "error": null,
+      "execution_time": 0.23717212677001953,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:44.534164"
+    },
+    {
+      "module": "stock_sse_deal_daily",
+      "passed": true,
+      "output": "",
+      "error": null,
+      "execution_time": 0.2792940139770508,
+      "data_validation": {
+        "is_list": true,
+        "not_empty": true,
+        "is_dict_items": true,
+        "failure_reason": null
+      },
+      "timestamp": "2025-04-18T10:17:44.816069"
+    }
+  ]
+}

@@ -1,39 +1,48 @@
 import asyncio
-from typing import Any, Dict, List
+from typing import List, Dict, Any
 import akshare as ak
-import pandas as pd
 
-
-async def stock_sse_summary() -> pd.DataFrame:
+async def execute() -> List[Dict[str, Any]]:
     """
-    上海证券交易所-股票数据总貌
-    :return: 上海证券交易所股票数据总貌
-    :rtype: pandas.DataFrame
+    异步获取上海证券交易所-股票数据总貌
+    
+    Returns:
+        List[Dict[str, Any]]: 转换后的数据列表，每个字典代表一行数据
+        
+    Raises:
+        Exception: 当akshare接口调用失败时抛出异常
     """
     try:
-        # 使用akshare同步接口获取数据
-        loop = asyncio.get_event_loop()
-        result = await loop.run_in_executor(None, ak.stock_sse_summary)
+        # 调用akshare接口获取数据
+        df = ak.stock_sse_summary()
+        # 将DataFrame转换为List[Dict]格式
+        result = df.to_dict(orient='records')
         return result
     except Exception as e:
-        raise ValueError(f"获取上海证券交易所股票数据总貌失败: {e}")
+        raise Exception(f"Failed to fetch stock_sse_summary data: {str(e)}")
 
-
-async def execute() -> pd.DataFrame:
+def test() -> List[Dict[str, Any]]:
     """
-    执行函数，获取上海证券交易所股票数据总貌
-    :return: 上海证券交易所股票数据总貌
-    :rtype: pandas.DataFrame
+    同步测试方法，用于自动化测试
+    
+    Returns:
+        List[Dict[str, Any]]: 转换后的数据列表
+        
+    Raises:
+        Exception: 当execute方法调用失败时抛出异常
     """
-    return await stock_sse_summary()
+    try:
+        return asyncio.run(execute())
+    except Exception as e:
+        raise Exception(f"Test failed: {str(e)}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
+    # 演示如何调用异步函数
     async def main():
         try:
-            df = await execute()
-            print(df)
+            data = await execute()
+            print(data)
         except Exception as e:
-            print(f"发生错误: {e}")
-
+            print(f"Error occurred: {e}")
+    
     asyncio.run(main())

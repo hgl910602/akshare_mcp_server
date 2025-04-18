@@ -1,0 +1,48 @@
+import asyncio
+from typing import List, Dict, Any
+import akshare as ak
+import pandas as pd
+
+async def execute() -> List[Dict[str, Any]]:
+    """
+    异步获取东方财富网-行情中心-沪深个股-两网及退市数据
+    
+    Returns:
+        List[Dict[str, Any]]: 返回两网及退市数据列表
+    """
+    try:
+        # 调用akshare同步接口获取数据
+        df = ak.stock_staq_net_stop()
+        
+        # 将DataFrame转换为List[Dict]格式
+        if not df.empty:
+            return df.to_dict("records")
+        return []
+    except Exception as e:
+        raise Exception(f"获取两网及退市数据失败: {e}")
+
+def test() -> List[Dict[str, Any]]:
+    """
+    同步测试方法，用于自动化测试
+    
+    Returns:
+        List[Dict[str, Any]]: 返回两网及退市数据列表
+        
+    Raises:
+        Exception: 当execute方法执行失败时抛出异常
+    """
+    try:
+        return asyncio.run(execute())
+    except Exception as e:
+        raise Exception(f"测试执行失败: {e}")
+
+if __name__ == "__main__":
+    # 演示如何调用异步函数
+    async def main():
+        try:
+            data = await execute()
+            print(data[:5])  # 打印前5条数据
+        except Exception as e:
+            print(f"执行出错: {e}")
+    
+    asyncio.run(main())

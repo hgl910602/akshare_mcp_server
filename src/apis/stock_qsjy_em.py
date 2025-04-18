@@ -1,0 +1,49 @@
+import asyncio
+from typing import List, Dict, Any
+import akshare as ak
+
+async def execute(date: str) -> List[Dict[str, Any]]:
+    """
+    异步获取东方财富网券商业绩月报数据
+    
+    Args:
+        date: 需要查询月份的最后一天的日期，格式为"YYYYMMDD"
+        
+    Returns:
+        券商业绩月报数据列表，每个元素为包含各字段的字典
+        
+    Raises:
+        Exception: 当akshare接口调用失败时抛出异常
+    """
+    try:
+        # 调用akshare同步接口，使用run_in_executor避免阻塞事件循环
+        loop = asyncio.get_running_loop()
+        df = await loop.run_in_executor(None, ak.stock_qsjy_em, date)
+        
+        # 将DataFrame转换为List[Dict]格式
+        result = df.to_dict(orient='records')
+        return result
+    except Exception as e:
+        raise Exception(f"获取券商业绩月报数据失败: {str(e)}")
+
+def test():
+    """
+    同步测试方法，用于自动化测试
+    
+    Raises:
+        直接抛出execute方法可能产生的异常
+    """
+    # 使用示例参数调用
+    date = "20200430"
+    return asyncio.run(execute(date))
+
+if __name__ == '__main__':
+    # 演示如何调用异步函数
+    async def main():
+        try:
+            data = await execute(date="20200430")
+            print(data)
+        except Exception as e:
+            print(f"Error: {e}")
+    
+    asyncio.run(main())
