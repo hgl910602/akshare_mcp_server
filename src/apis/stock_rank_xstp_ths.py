@@ -20,7 +20,7 @@ async def execute(symbol: str = "500日均线") -> List[Dict[str, Any]]:
         # 调用akshare同步接口，使用await在异步环境中执行
         df = await asyncio.get_event_loop().run_in_executor(
             None, 
-            lambda: ak.stock_rank_xstp_ths(symbol=symbol)
+            lambda: ak.stock_rank_xstp_ths(symbol=symbol))
         
         # 将DataFrame转换为List[Dict]格式
         result = df.to_dict(orient="records")

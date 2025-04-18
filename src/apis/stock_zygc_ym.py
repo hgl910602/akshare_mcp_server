@@ -20,6 +20,7 @@ async def execute(symbol: str) -> List[Dict[str, Any]]:
         df = await asyncio.get_event_loop().run_in_executor(
             None, 
             lambda: ak.stock_zygc_ym(symbol=symbol)
+        )  # 修复：添加了缺失的右括号
         
         # 将DataFrame转换为List[Dict]格式
         result = df.to_dict(orient="records")
