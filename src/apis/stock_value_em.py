@@ -46,7 +46,7 @@ if __name__ == "__main__":
     # 演示如何调用该函数
     async def main():
         try:
-            data = await execute(symbol="300766"))
+            data = await execute(symbol="300766")
             print("获取数据成功:")
             for item in data:
                 print(item)

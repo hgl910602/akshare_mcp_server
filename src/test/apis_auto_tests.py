@@ -118,15 +118,48 @@ def run_all_tests() -> List[Dict[str, Any]]:
     """运行所有测试并生成报告"""
     api_files = discover_api_files()
     results = []
+    total_tests = len(api_files)
     
-    for api_file in api_files:
-        result = test_api_module(api_file)
-        results.append(result.to_dict())
+    # 打印测试开始信息
+    print(f"\n{'='*50}")
+    print(f"开始执行测试，共发现 {total_tests} 个API模块")
+    print(f"{'='*50}\n")
+    
+    for index, api_file in enumerate(api_files, 1):
+        # 打印单个测试开始信息
+        module_name = os.path.splitext(os.path.basename(api_file))[0]
+        print(f"======= [开始测试] ({index}/{total_tests}) {module_name} =======")
         
-        status = "✓" if result.passed else "✗"
-        print(f"{status} {result.module_name} ({result.execution_time:.2f}s)")
-        if result.error:
-            print(f"    Error: {result.error}")
+        try:
+            result = test_api_module(api_file)
+            results.append(result.to_dict())
+            
+            # 打印单个测试结果
+            status = "✓" if result.passed else "✗"
+            print(f"======= [测试完成] ({index}/{total_tests}) {status} {module_name} (耗时: {result.execution_time:.2f}s) =======")
+            if result.error:
+                print(f"    [错误详情] {result.error}")
+                
+        except Exception as e:
+            # 捕获测试框架本身的异常
+            result = APITestResult(module_name)
+            result.passed = False
+            result.error = f"测试框架执行异常: {str(e)}"
+            result.data_validation = {
+                "failure_reason": f"测试框架内部错误: {str(e)}"
+            }
+            results.append(result.to_dict())
+            print(f"======= [测试失败] ({index}/{total_tests}) ✗ {module_name} =======")
+            print(f"    [框架错误] {str(e)}")
+            
+        print("-"*50)  # 添加分隔线
+    
+    # 打印测试总结信息
+    passed_count = sum(1 for r in results if r["passed"])
+    print(f"\n{'='*50}")
+    print(f"测试执行完成")
+    print(f"总计: {len(api_files)} | 通过: {passed_count} | 失败: {len(api_files)-passed_count}")
+    print(f"{'='*50}\n")
     
     # 生成测试报告
     generate_test_report(results)
